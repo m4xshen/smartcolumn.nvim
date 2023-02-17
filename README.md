@@ -35,7 +35,7 @@ A Neovim plugin that hides your colorcolumn when uneeded.
 
 - [lazy.nvim](https://github.com/folke/lazy.nvim)
 ```Lua
-use "m4xshen/smartcolumn.nvim"
+"m4xshen/smartcolumn.nvim"
 ```
 
 - [packer.nvim](https://github.com/wbthomason/packer.nvim)
