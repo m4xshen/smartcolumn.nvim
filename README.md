@@ -23,11 +23,11 @@ smartcolumn.nvim
   </a>
 </p>
 
-![demo](https://user-images.githubusercontent.com/74842863/219736195-b0360707-4beb-4a77-a13d-e2fe8b1ef0ec.gif)
+![demo](https://user-images.githubusercontent.com/74842863/219844450-37d96fe1-d15d-4aaf-ae57-1c6ce66d8cbc.gif)
 
 ## 📃 Introduction
   
-A Neovim plugin that hides your colorcolumn when uneeded.
+A Neovim plugin hiding your colorcolumn when uneeded.
 
 ## 📦 Installation
 
