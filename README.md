@@ -60,7 +60,7 @@ You can pass your config table into the `setup()` function.
 - `colorcolumn`: screen columns that are highlighted
   - type of the value: integer
   - default value: `80`
-- `disabled_filetypes`: The plugin will be disabled under the filetypes in this table.
+- `disabled_filetypes`: the `colorcolumn` will be disabled under the filetypes in this table
   - type of the value: table of strings
   - default value: `{ "help", "text", "markdown" }`
   
