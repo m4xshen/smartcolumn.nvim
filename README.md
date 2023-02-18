@@ -27,7 +27,7 @@ smartcolumn.nvim
 
 ## 📃 Introduction
   
-A Neovim plugin hiding your colorcolumn when uneeded.
+A Neovim plugin hiding your colorcolumn when unneeded.
 
 ## 📦 Installation
 
