@@ -19,7 +19,7 @@ local function detect()
    local max_column = 0
    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
    for _, line in pairs(lines) do
-      max_column = math.max(max_column, #line)
+      max_column = math.max(max_column, vim.fn.strdisplaywidth(line))
    end
 
    local value = ""
