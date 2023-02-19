@@ -40,7 +40,10 @@ A Neovim plugin hiding your colorcolumn when unneeded.
 
 - [lazy.nvim](https://github.com/folke/lazy.nvim)
 ```Lua
-"m4xshen/smartcolumn.nvim"
+{
+  "m4xshen/smartcolumn.nvim",
+  opts = {}
+},
 ```
 
 - [packer.nvim](https://github.com/wbthomason/packer.nvim)
@@ -53,7 +56,7 @@ use "m4xshen/smartcolumn.nvim"
 Plug "m4xshen/smartcolumn.nvim"
 ```
 
-2. Setup the plugin in your `init.lua`.
+2. Setup the plugin in your `init.lua`. This step is not needed with lazy.nvim if `opts` is set as above.
 ```Lua
 require("smartcolumn").setup()
 ```
