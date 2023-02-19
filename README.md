@@ -68,6 +68,10 @@ You can pass your config table into the `setup()` function.
 - `disabled_filetypes`: the `colorcolumn` will be disabled under the filetypes in this table
   - type of the value: table of strings
   - default value: `{ "help", "text", "markdown" }`
+- `limit_to_window`: the `colorcolumn` will be displayed based on the visible lines in the window instead of all lines in the current buffer
+  - type of the value: boolean
+  - default value: `false`
+
   
 ### Default config
 
@@ -75,5 +79,6 @@ You can pass your config table into the `setup()` function.
 local config = {
    colorcolumn = 80,
    disabled_filetypes = { "help", "text", "markdown" },
+   limit_to_window = false,
 }
 ```
