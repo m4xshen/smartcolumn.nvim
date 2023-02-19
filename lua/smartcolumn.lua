@@ -10,7 +10,7 @@ local function is_disabled()
    local current_filetype = vim.api.nvim_buf_get_option(0, "filetype")
    for _, filetype in pairs(config.disabled_filetypes) do
       if filetype == current_filetype then
-          return true
+         return true
       end
    end
    return false
