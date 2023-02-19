@@ -7,13 +7,13 @@ local config = {
 }
 
 local function is_disabled()
-local current_filetype = vim.api.nvim_buf_get_option(0, "filetype")
-for _, filetype in pairs(config.disabled_filetypes) do
-   if filetype == current_filetype then
-       return true
+   local current_filetype = vim.api.nvim_buf_get_option(0, "filetype")
+   for _, filetype in pairs(config.disabled_filetypes) do
+      if filetype == current_filetype then
+          return true
+      end
    end
-end
-return false
+   return false
 end
 
 local function detect()
