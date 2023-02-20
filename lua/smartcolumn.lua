@@ -3,6 +3,7 @@ local smartcolumn = {}
 local config = {
    colorcolumn = 80,
    disabled_filetypes = { "help", "text", "markdown" },
+   filetype_colorcolumns = {},
    limit_to_window = false,
 }
 
@@ -31,11 +32,13 @@ local function detect()
 
    local current_buf = vim.api.nvim_get_current_buf()
    local windows = vim.api.nvim_list_wins()
+   local buf_filetype = vim.api.nvim_buf_get_option(current_buf, "filetype")
+   local colorcolumn = config.filetype_colorcolumns[buf_filetype] or config.colorcolumn
    for _, window in pairs(windows) do
       if vim.api.nvim_win_get_buf(window) == current_buf then
-         if not is_disabled() and max_column > config.colorcolumn then
+         if not is_disabled() and max_column > colorcolumn then
             vim.api.nvim_win_set_option(window, "colorcolumn",
-               tostring(config.colorcolumn))
+               tostring(colorcolumn))
          else
             vim.api.nvim_win_set_option(window, "colorcolumn", "")
          end
