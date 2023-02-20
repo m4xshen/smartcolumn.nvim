@@ -74,6 +74,9 @@ You can pass your config table into the `setup()` function.
 - `limit_to_window`: the `colorcolumn` will be displayed based on the visible lines in the window instead of all lines in the current buffer
   - type of the value: boolean
   - default value: `false`
+- `filetype_colorcolumns`: filetype-specific values for `colorcolumn`. when editing a buffer with a filetype present in this table, the value for that filetype will be used in place of `config.colorcolumn`. for example, with `filetype_colorcolumns = { ruby = 120, java = 200 }` the colorcolumn will appear at 120 characters when editing a buffer with filetype `ruby`, but will appear at 200 characters when editing a buffer with filetype `java`.
+  - type of the value: table of filetype names to integers
+  - default value: `{}`
 
   
 ### Default config
@@ -82,6 +85,7 @@ You can pass your config table into the `setup()` function.
 local config = {
    colorcolumn = 80,
    disabled_filetypes = { "help", "text", "markdown" },
+   filetype_colorcolumns = {},
    limit_to_window = false,
 }
 ```
