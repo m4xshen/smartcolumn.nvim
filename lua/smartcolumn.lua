@@ -3,7 +3,7 @@ local smartcolumn = {}
 local config = {
    colorcolumn = 80,
    disabled_filetypes = { "help", "text", "markdown" },
-   filetype_colorcolumns = {},
+   custom_colorcolumn = {},
    limit_to_window = false,
 }
 
@@ -18,7 +18,6 @@ local function is_disabled()
 end
 
 local function detect()
-   local max_column = 0
    local lines
    if config.limit_to_window then
       lines = vim.api.nvim_buf_get_lines(0, vim.fn.line("w0"),
@@ -26,14 +25,18 @@ local function detect()
    else
       lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
    end
+
+   local max_column = 0
    for _, line in pairs(lines) do
       max_column = math.max(max_column, vim.fn.strdisplaywidth(line))
    end
 
+   local buf_filetype = vim.api.nvim_buf_get_option(0, "filetype")
+   local colorcolumn =
+      config.custom_colorcolumn[buf_filetype] or config.colorcolumn
+
    local current_buf = vim.api.nvim_get_current_buf()
    local windows = vim.api.nvim_list_wins()
-   local buf_filetype = vim.api.nvim_buf_get_option(current_buf, "filetype")
-   local colorcolumn = config.filetype_colorcolumns[buf_filetype] or config.colorcolumn
    for _, window in pairs(windows) do
       if vim.api.nvim_win_get_buf(window) == current_buf then
          if not is_disabled() and max_column > colorcolumn then
