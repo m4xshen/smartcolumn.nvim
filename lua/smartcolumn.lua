@@ -20,7 +20,7 @@ end
 local function detect()
    local lines
    if config.limit_to_window then
-      lines = vim.api.nvim_buf_get_lines(0, vim.fn.line("w0"),
+      lines = vim.api.nvim_buf_get_lines(0, vim.fn.line("w0")-1,
          vim.fn.line("w$"), true)
    else
       lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
