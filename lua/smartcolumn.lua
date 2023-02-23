@@ -24,8 +24,7 @@ local function detect()
       lines = vim.api.nvim_buf_get_lines(0, vim.fn.line("w0")-1,
          vim.fn.line("w$"), true)
    elseif config.limit_to_line then
-      lines = vim.api.nvim_buf_get_lines(0, vim.fn.line(".")-1,
-         vim.fn.line("."), true)
+      lines = { vim.api.nvim_get_current_line() }
    else
       lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
    end
