@@ -5,6 +5,7 @@ local config = {
    disabled_filetypes = { "help", "text", "markdown" },
    custom_colorcolumn = {},
    limit_to_window = false,
+   limit_to_line = false,
 }
 
 local function is_disabled()
@@ -22,6 +23,8 @@ local function detect()
    if config.limit_to_window then
       lines = vim.api.nvim_buf_get_lines(0, vim.fn.line("w0")-1,
          vim.fn.line("w$"), true)
+   elseif config.limit_to_line then
+      lines = { vim.api.nvim_get_current_line() }
    else
       lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
    end

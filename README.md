@@ -26,7 +26,7 @@ smartcolumn.nvim
 ![demo](https://user-images.githubusercontent.com/74842863/219844450-37d96fe1-d15d-4aaf-ae57-1c6ce66d8cbc.gif)
 
 ## 📃 Introduction
-  
+
 A Neovim plugin hiding your colorcolumn when unneeded.
 
 ## ⚙️ Functions
@@ -77,13 +77,15 @@ The available options:
 - `limit_to_window`: the `colorcolumn` will be displayed based on the visible lines in the window instead of all lines in the current buffer
   - type of the value: boolean
   - default value: `false`
+- `limit_to_line`: the `colorcolumn` will be displayed based on the current line in the window instead of all lines in the current buffer
+  - type of the value: boolean
+  - default value: `false`
 - `custom_colorcolumn`: custom `colorcolumn` values for different filetype. when editing a buffer with a filetype present in this table, the value for that filetype will be used in place of `config.colorcolumn`.
   - type of the value: table of filetype names to integers
   - default value: `{}`
 
 Example: With `custom_colorcolumn = { ruby = 120, java = 200 }` the colorcolumn will appear at 120 characters when editing a buffer with filetype `ruby`, but will appear at 200 characters when editing a buffer with filetype `java`.
 
-  
 ### Default config
 
 ```Lua
@@ -92,5 +94,6 @@ local config = {
    disabled_filetypes = { "help", "text", "markdown" },
    custom_colorcolumn = {},
    limit_to_window = false,
+   limit_to_line = false,
 }
 ```
