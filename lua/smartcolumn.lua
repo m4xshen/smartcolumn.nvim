@@ -4,7 +4,7 @@ local config = {
    colorcolumn = "80",
    disabled_filetypes = { "help", "text", "markdown" },
    custom_colorcolumn = {},
-   scope = "global",
+   scope = "file",
 }
 
 local function is_disabled()
@@ -18,7 +18,7 @@ local function is_disabled()
 end
 
 local function detect()
-   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true) -- global scope
+   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true) -- file scope
    if config.scope == "line" then
       lines = { vim.api.nvim_get_current_line() }
    elseif config.scope == "window" then
