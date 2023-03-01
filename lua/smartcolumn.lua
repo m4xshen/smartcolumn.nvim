@@ -4,8 +4,7 @@ local config = {
    colorcolumn = "80",
    disabled_filetypes = { "help", "text", "markdown" },
    custom_colorcolumn = {},
-   limit_to_window = false,
-   limit_to_line = false,
+   scope = "global",
 }
 
 local function is_disabled()
@@ -19,14 +18,12 @@ local function is_disabled()
 end
 
 local function detect()
-   local lines
-   if config.limit_to_window then
+   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true) -- global scope
+   if config.scope == "line" then
+      lines = { vim.api.nvim_get_current_line() }
+   elseif config.scope == "window" then
       lines = vim.api.nvim_buf_get_lines(0, vim.fn.line("w0")-1,
          vim.fn.line("w$"), true)
-   elseif config.limit_to_line then
-      lines = { vim.api.nvim_get_current_line() }
-   else
-      lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
    end
 
    local max_column = 0
