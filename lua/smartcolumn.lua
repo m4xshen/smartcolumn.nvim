@@ -17,13 +17,14 @@ local function is_disabled()
    return false
 end
 
-local function detect()
-   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true) -- file scope
+local function exceed(buf, win, min_colorcolumn)
+   local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, true) -- file scope
    if config.scope == "line" then
-      lines = { vim.api.nvim_get_current_line() }
+      lines = vim.api.nvim_buf_get_lines(buf,
+         vim.fn.line(".", win)-1, vim.fn.line(".", win), true)
    elseif config.scope == "window" then
-      lines = vim.api.nvim_buf_get_lines(0, vim.fn.line("w0")-1,
-         vim.fn.line("w$"), true)
+      lines = vim.api.nvim_buf_get_lines(buf,
+         vim.fn.line("w0", win)-1, vim.fn.line("w$", win), true)
    end
 
    local max_column = 0
@@ -31,6 +32,10 @@ local function detect()
       max_column = math.max(max_column, vim.fn.strdisplaywidth(line))
    end
 
+   return not is_disabled() and max_column > min_colorcolumn
+end
+
+local function update()
    local buf_filetype = vim.api.nvim_buf_get_option(0, "filetype")
    local colorcolumns =
       config.custom_colorcolumn[buf_filetype] or config.colorcolumn
@@ -45,13 +50,18 @@ local function detect()
    min_colorcolumn = tonumber(min_colorcolumn)
 
    local current_buf = vim.api.nvim_get_current_buf()
-   local windows = vim.api.nvim_list_wins()
-   for _, window in pairs(windows) do
-      if vim.api.nvim_win_get_buf(window) == current_buf then
-         if not is_disabled() and max_column > min_colorcolumn then
-            vim.opt.colorcolumn = colorcolumns
+   local wins = vim.api.nvim_list_wins()
+   for _, win in pairs(wins) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      if buf == current_buf then
+         if exceed(buf, win, min_colorcolumn) then
+            if type(colorcolumns) == "table" then
+               vim.wo[win].colorcolumn = table.concat(colorcolumns, ",")
+            else
+               vim.wo[win].colorcolumn = colorcolumns
+            end
          else
-            vim.opt.colorcolumn = nil
+            vim.wo[win].colorcolumn = nil
          end
       end
    end
@@ -64,8 +74,8 @@ function smartcolumn.setup(user_config)
       config[option] = value
    end
 
-   vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorMovedI" },
-      { callback = detect })
+   vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorMovedI",
+      "WinScrolled" }, { callback = update })
 end
 
 return smartcolumn
