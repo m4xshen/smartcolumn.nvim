@@ -64,36 +64,31 @@ require("smartcolumn").setup()
 
 ## 🔧 Configuration
 
-You can pass your config table into the `setup()` function.
+You can pass your config table into the `setup()` function or `opts` if you use lazy.nvim.
 
 The available options:
 
-- `colorcolumn`: screen columns that are highlighted
-  - type of the value: integer
-  - default value: `80`
-- `disabled_filetypes`: the `colorcolumn` will be disabled under the filetypes in this table
-  - type of the value: table of strings
-  - default value: `{ "help", "text", "markdown" }`
-- `limit_to_window`: the `colorcolumn` will be displayed based on the visible lines in the window instead of all lines in the current buffer
-  - type of the value: boolean
-  - default value: `false`
-- `limit_to_line`: the `colorcolumn` will be displayed based on the current line in the window instead of all lines in the current buffer
-  - type of the value: boolean
-  - default value: `false`
-- `custom_colorcolumn`: custom `colorcolumn` values for different filetype. when editing a buffer with a filetype present in this table, the value for that filetype will be used in place of `config.colorcolumn`.
-  - type of the value: table of filetype names to integers
-  - default value: `{}`
-
-Example: With `custom_colorcolumn = { ruby = 120, java = 200 }` the colorcolumn will appear at 120 characters when editing a buffer with filetype `ruby`, but will appear at 200 characters when editing a buffer with filetype `java`.
+- `colorcolumn` (strings or table) : screen columns that are highlighted
+  - `"80"` (default)
+  - `{ "80", "100" }`
+- `disabled_filetypes` (table of strings) : the `colorcolumn` will be disabled under the filetypes in this table
+  - `{ "help", "text", "markdown" }` (default)
+  - `{ "NvimTree", "Lazy", "mason", "help" }`
+- `scope` (strings): the plugin only checks whether the lines within scope exceed colorcolumn
+  - `"file"` (default): current file
+  - `"window"`: visible part of current window
+  - `"line"`: current line
+- `custom_colorcolumn` (table): custom `colorcolumn` values for different filetype
+  - `{}` (default)
+  - `{ ruby = "120", java = { "180", "200"} }`
 
 ### Default config
 
 ```Lua
 local config = {
-   colorcolumn = 80,
+   colorcolumn = "80",
    disabled_filetypes = { "help", "text", "markdown" },
    custom_colorcolumn = {},
-   limit_to_window = false,
-   limit_to_line = false,
+   scope = "file",
 }
 ```
