@@ -29,11 +29,14 @@ smartcolumn.nvim
 
 A Neovim plugin hiding your colorcolumn when unneeded.
 
-## ⚙️ Functions
+## ⚙️ Features
 
-- The colorcolumn is hidden as default, but it appears after one of lines in the file exceeds the `colorcolumn` value you set.
-- The colorcolumn is hidden in the filetypes in `disabled_filetypes`.
-- You can set custom colorcolumn value for different filetype.
+The colorcolumn is hidden as default, but it appears after one of lines in the scope exceeds the `colorcolumn` value you set.
+
+You can:
+- hide colorcolumn for specific filetype
+- set custom colorcolumn value for different filetype
+- specify the scope where the plugin should work
 
 ## 📦 Installation
 
