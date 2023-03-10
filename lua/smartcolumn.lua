@@ -35,6 +35,7 @@ local function exceed(buf, win, min_colorcolumn)
    return not is_disabled() and max_column > min_colorcolumn
 end
 
+local buf_states = {}
 local function update()
    local buf_filetype = vim.api.nvim_buf_get_option(0, "filetype")
    local colorcolumns =
@@ -54,14 +55,18 @@ local function update()
    for _, win in pairs(wins) do
       local buf = vim.api.nvim_win_get_buf(win)
       if buf == current_buf then
-         if exceed(buf, win, min_colorcolumn) then
-            if type(colorcolumns) == "table" then
-               vim.wo[win].colorcolumn = table.concat(colorcolumns, ",")
+         local current_state = exceed(buf, win, min_colorcolumn)
+         if current_state ~= buf_states[buf] then
+            buf_states[buf] = current_state
+            if current_state then
+               if type(colorcolumns) == "table" then
+                  vim.wo[win].colorcolumn = table.concat(colorcolumns, ",")
+               else
+                  vim.wo[win].colorcolumn = colorcolumns
+               end
             else
-               vim.wo[win].colorcolumn = colorcolumns
+               vim.wo[win].colorcolumn = nil
             end
-         else
-            vim.wo[win].colorcolumn = nil
          end
       end
    end
