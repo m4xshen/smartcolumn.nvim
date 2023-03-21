@@ -54,14 +54,18 @@ local function update()
    for _, win in pairs(wins) do
       local buf = vim.api.nvim_win_get_buf(win)
       if buf == current_buf then
-         if exceed(buf, win, min_colorcolumn) then
-            if type(colorcolumns) == "table" then
-               vim.wo[win].colorcolumn = table.concat(colorcolumns, ",")
+         local current_state = exceed(buf, win, min_colorcolumn)
+         if current_state ~= vim.b.prev_state then
+            vim.b.prev_state = current_state
+            if current_state then
+               if type(colorcolumns) == "table" then
+                  vim.wo[win].colorcolumn = table.concat(colorcolumns, ",")
+               else
+                  vim.wo[win].colorcolumn = colorcolumns
+               end
             else
-               vim.wo[win].colorcolumn = colorcolumns
+               vim.wo[win].colorcolumn = nil
             end
-         else
-            vim.wo[win].colorcolumn = nil
          end
       end
    end
