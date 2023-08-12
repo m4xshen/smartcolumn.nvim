@@ -20,11 +20,19 @@ end
 local function exceed(buf, win, min_colorcolumn)
    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, true) -- file scope
    if config.scope == "line" then
-      lines = vim.api.nvim_buf_get_lines(buf,
-         vim.fn.line(".", win)-1, vim.fn.line(".", win), true)
+      lines = vim.api.nvim_buf_get_lines(
+         buf,
+         vim.fn.line(".", win) - 1,
+         vim.fn.line(".", win),
+         true
+      )
    elseif config.scope == "window" then
-      lines = vim.api.nvim_buf_get_lines(buf,
-         vim.fn.line("w0", win)-1, vim.fn.line("w$", win), true)
+      lines = vim.api.nvim_buf_get_lines(
+         buf,
+         vim.fn.line("w0", win) - 1,
+         vim.fn.line("w$", win),
+         true
+      )
    end
 
    local max_column = 0
@@ -42,7 +50,8 @@ local function update()
    if type(config.custom_colorcolumn) == "function" then
       colorcolumns = config.custom_colorcolumn()
    else
-      colorcolumns = config.custom_colorcolumn[buf_filetype] or config.colorcolumn
+      colorcolumns = config.custom_colorcolumn[buf_filetype]
+         or config.colorcolumn
    end
 
    local min_colorcolumn = colorcolumns
@@ -83,8 +92,10 @@ function smartcolumn.setup(user_config)
       config[option] = value
    end
 
-   vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorMovedI",
-      "WinScrolled" }, { callback = update })
+   vim.api.nvim_create_autocmd(
+      { "BufEnter", "CursorMoved", "CursorMovedI", "WinScrolled" },
+      { callback = update }
+   )
 end
 
 return smartcolumn
