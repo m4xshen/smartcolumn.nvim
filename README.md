@@ -81,9 +81,15 @@ The available options:
   - `"file"` (default): current file
   - `"window"`: visible part of current window
   - `"line"`: current line
-- `custom_colorcolumn` (table): custom `colorcolumn` values for different filetype
+- `custom_colorcolumn` (table or function returning string): custom `colorcolumn` values for different filetypes
   - `{}` (default)
   - `{ ruby = "120", java = { "180", "200"} }`
+  - you can also pass a function to handle more complicated logic:
+  ```lua
+  custom_colorcolumn = function ()
+     return "100"
+  end
+  ```
 
 ### Default config
 

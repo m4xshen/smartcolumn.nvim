@@ -37,8 +37,13 @@ end
 
 local function update()
    local buf_filetype = vim.api.nvim_buf_get_option(0, "filetype")
-   local colorcolumns =
-      config.custom_colorcolumn[buf_filetype] or config.colorcolumn
+   local colorcolumns
+
+   if type(config.custom_colorcolumn) == "function" then
+      colorcolumns = config.custom_colorcolumn()
+   else
+      colorcolumns = config.custom_colorcolumn[buf_filetype] or config.colorcolumn
+   end
 
    local min_colorcolumn = colorcolumns
    if type(colorcolumns) == "table" then
