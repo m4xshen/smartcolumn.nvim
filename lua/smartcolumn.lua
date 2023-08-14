@@ -7,16 +7,6 @@ local config = {
    scope = "file",
 }
 
-local function is_disabled()
-   local current_filetype = vim.api.nvim_buf_get_option(0, "filetype")
-   for _, filetype in pairs(config.disabled_filetypes) do
-      if filetype == current_filetype then
-         return true
-      end
-   end
-   return false
-end
-
 local function exceed(buf, win, min_colorcolumn)
    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, true) -- file scope
    if config.scope == "line" then
@@ -40,7 +30,7 @@ local function exceed(buf, win, min_colorcolumn)
       max_column = math.max(max_column, vim.fn.strdisplaywidth(line))
    end
 
-   return not is_disabled() and max_column > min_colorcolumn
+   return not vim.tbl_contains(config.disabled_filetypes, vim.bo.ft) and max_column > min_colorcolumn
 end
 
 local function update()
