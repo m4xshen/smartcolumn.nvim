@@ -30,9 +30,9 @@ local function exceed(buf, win, min_colorcolumn)
    local max_column = 0
 
    for _, line in pairs(lines) do
-      local err, column_number = pcall(vim.fn.strdisplaywidth, line)
+      local success, column_number = pcall(vim.fn.strdisplaywidth, line)
 
-      if err == false then
+      if not success then
          return false
       end
 
