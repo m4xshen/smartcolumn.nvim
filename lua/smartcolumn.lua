@@ -26,8 +26,15 @@ local function exceed(buf, win, min_colorcolumn)
    end
 
    local max_column = 0
+
    for _, line in pairs(lines) do
-      max_column = math.max(max_column, vim.fn.strdisplaywidth(line))
+      local success, column_number = pcall(vim.fn.strdisplaywidth, line)
+
+      if not success then
+         return false
+      end
+
+      max_column = math.max(max_column, column_number)
    end
 
    return not vim.tbl_contains(config.disabled_filetypes, vim.bo.ft) and max_column > min_colorcolumn
