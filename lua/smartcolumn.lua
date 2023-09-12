@@ -37,7 +37,8 @@ local function exceed(buf, win, min_colorcolumn)
       max_column = math.max(max_column, column_number)
    end
 
-   return not vim.tbl_contains(config.disabled_filetypes, vim.bo.ft) and max_column > min_colorcolumn
+   return not vim.tbl_contains(config.disabled_filetypes, vim.bo.ft)
+      and max_column > min_colorcolumn
 end
 
 local function update()
@@ -89,9 +90,13 @@ function smartcolumn.setup(user_config)
       config[option] = value
    end
 
+   local group = vim.api.nvim_create_augroup("SmartColumn", {})
    vim.api.nvim_create_autocmd(
       { "BufEnter", "CursorMoved", "CursorMovedI", "WinScrolled" },
-      { callback = update }
+      {
+         group = group,
+         callback = update,
+      }
    )
 end
 
