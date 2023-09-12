@@ -23,7 +23,7 @@ local function get_wrapped_column_numbers(unwrapped_col_width,
    local c_col = min_colorcolumn
    while c_col <= unwrapped_col_width do
        table.insert(t, c_col)
-       c_col = c_col + wrapped_col_width - gutter_width * math.floor(column_len / wrapped_col_width)
+       c_col = c_col + wrapped_col_width - gutter_width
    end
    return t
 end
@@ -47,27 +47,33 @@ local function exceed(buf, win, min_colorcolumn)
    end
 
    local max_column = 0
-
+   local num_rows_changed = false
    local exceed_table = {}
    local exceed_columns = {}
    local win_width = vim.api.nvim_win_get_width(win)
    local gutter_width = vim.fn.getwininfo(win)[1].textoff
 
-
    for _, line in pairs(lines) do
       local success, column_number = pcall(vim.fn.strdisplaywidth, line)
 
       if not success then
-         return false
+         return false, {}
       end
 
       max_column = math.max(max_column, column_number)
       if vim.wo[win].wrap == true then
          local wrapped_rows = math.ceil(column_number / win_width)
+         if not num_rows_changed then
+             num_rows_changed = (vim.b.prev_num_wrapped_rows ~= wrapped_rows)
+             vim.b.prev_num_wrapped_rows = wrapped_rows
+         end
          local unwrapped_col_width = wrapped_rows * column_number
          exceed_columns = get_wrapped_column_numbers(unwrapped_col_width,
             win_width, gutter_width, column_number, min_colorcolumn)
          exceed_table = vim.tbl_extend("keep", exceed_table, exceed_columns)
+      else
+          num_rows_changed = (vim.b.prev_num_wrapped_rows ~= 1)
+          vim.b.prev_num_wrapped_rows = 1
       end
    end
 
@@ -75,13 +81,44 @@ local function exceed(buf, win, min_colorcolumn)
 
 
    local state = 0
-   if does_exceed and vim.wo[win].wrap then
+   if does_exceed and num_rows_changed then
+      state = 3
+   elseif does_exceed and vim.wo[win].wrap then
       state = 2
    elseif does_exceed then
       state = 1
+      exceed_table = {min_colorcolumn}
    end
 
    return state, exceed_table
+end
+
+local function set_win_colorcolumns(buf, win, colorcolumns)
+   local current_state
+   local exceed_cols
+   if type(colorcolumns) == "table" then
+      local colorcolumns_to_set = {}
+      local diff_state = nil
+      for _, colorcolumn in colorcolumns do
+         current_state, exceed_cols = exceed(buf, win, tonumber(colorcolumn))
+         if current_state ~= vim.b.prev_state then
+            vim.b.prev_state = current_state
+            colorcolumns_to_set = vim.tbl_extend("keep", colorcolumns_to_set, exceed_cols)
+         end
+      end
+      if diff_state ~= nil then
+         vim.wo[win].colorcolumn = table.concat(colorcolumns_to_set, ",")
+         vim.b.prev_state = diff_state
+      end
+   elseif type(colorcolumns) == "string" then
+       current_state, exceed_cols = exceed(buf, win, tonumber(colorcolumns))
+       if current_state ~= vim.b.prev_state then
+          vim.b.prev_state = current_state
+          vim.wo[win].colorcolumn = table.concat(exceed_cols, ",")
+       end
+   else
+       vim.wo[win].colorcolumn = nil
+   end
 end
 
 local function update()
@@ -95,44 +132,13 @@ local function update()
          or config.colorcolumn
    end
 
-   local min_colorcolumn = colorcolumns
-   if type(colorcolumns) == "table" then
-      min_colorcolumn = colorcolumns[1]
-      for _, colorcolumn in pairs(colorcolumns) do
-         min_colorcolumn = math.min(min_colorcolumn, colorcolumn)
-      end
-   end
-   min_colorcolumn = tonumber(min_colorcolumn)
 
    local current_buf = vim.api.nvim_get_current_buf()
    local wins = vim.api.nvim_list_wins()
    for _, win in pairs(wins) do
       local buf = vim.api.nvim_win_get_buf(win)
       if buf == current_buf then
-         local current_state, exceed_cols = exceed(buf, win, min_colorcolumn)
-         if current_state ~= vim.b.prev_state then
-            vim.b.prev_state = current_state
-            if current_state == 2 then
-               if type(colorcolumns) == "table" then
-                  colorcolumns = vim.tbl_extend("keep", colorcolumns, exceed_cols)
-                  vim.wo[win].colorcolumn = table.concat(colorcolumns, ",")
-               else
-                  for _, v in ipairs(exceed_cols) do
-                     colorcolumns = colorcolumns .. (",%d"):format(v)
-                  end
-                  vim.wo[win].colorcolumn = colorcolumns
-                  print(colorcolumns)
-               end
-            elseif current_state == 1 then
-               if type(colorcolumns) == "table" then
-                  vim.wo[win].colorcolumn = table.concat(colorcolumns, ",")
-               else
-                  vim.wo[win].colorcolumn = colorcolumns
-               end
-            else
-               vim.wo[win].colorcolumn = nil
-            end
-         end
+          set_win_colorcolumns(buf, win, colorcolumns)
       end
    end
 end
