@@ -70,7 +70,7 @@ local function exceed(buf, win, min_colorcolumn)
 
       max_column = math.max(max_column, column_number)
       if vim.wo[win].wrap == true then
-         local wrapped_rows = math.ceil(column_number / win_width)
+         local wrapped_rows = math.ceil(column_number / (win_width - gutter_width))
          if not num_rows_changed then
              num_rows_changed = (vim.b.prev_num_wrapped_rows ~= wrapped_rows)
              vim.b.prev_num_wrapped_rows = wrapped_rows
