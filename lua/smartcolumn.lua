@@ -55,11 +55,12 @@ local function exceed(buf, win, min_colorcolumn)
    end
 
    local max_column = 0
-   local num_rows_changed = false
    local exceed_table = {}
    local exceed_columns = {}
    local win_width = vim.api.nvim_win_get_width(win)
    local gutter_width = vim.fn.getwininfo(win)[1].textoff
+   local state_changed = (vim.b.prev_screen_width ~= win_width)
+   vim.b.prev_screen_width = win_width
 
    for _, line in pairs(lines) do
       local success, column_number = pcall(vim.fn.strdisplaywidth, line)
@@ -71,16 +72,17 @@ local function exceed(buf, win, min_colorcolumn)
       max_column = math.max(max_column, column_number)
       if vim.wo[win].wrap == true then
          local wrapped_rows = math.ceil(column_number / (win_width - gutter_width))
-         if not num_rows_changed then
-             num_rows_changed = (vim.b.prev_num_wrapped_rows ~= wrapped_rows)
+         if not state_changed then
+             state_changed = (vim.b.prev_num_wrapped_rows ~= wrapped_rows)
              vim.b.prev_num_wrapped_rows = wrapped_rows
+             vim.b.prev_screen_width = win_width
          end
          local unwrapped_col_width = wrapped_rows * column_number
          exceed_columns = get_wrapped_column_numbers(unwrapped_col_width,
             win_width, gutter_width, column_number, min_colorcolumn)
          exceed_table = table_merge(exceed_table, exceed_columns)
       else
-          num_rows_changed = (vim.b.prev_num_wrapped_rows ~= 1)
+          state_changed = state_changed or (vim.b.prev_num_wrapped_rows ~= 1)
           vim.b.prev_num_wrapped_rows = 1
       end
    end
@@ -89,7 +91,7 @@ local function exceed(buf, win, min_colorcolumn)
 
 
    local state = 0
-   if does_exceed and num_rows_changed then
+   if does_exceed and state_changed then
       state = 3
    elseif does_exceed and vim.wo[win].wrap then
       state = 2
