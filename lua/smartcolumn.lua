@@ -7,6 +7,14 @@ local config = {
    scope = "file",
 }
 
+-- merge values from t2 into t1. returns t1
+local function table_merge(t1, t2) 
+    for _, v in ipairs(t2) do
+        table.insert(t1, v)
+    end
+    return t1
+end
+
 -- this function returns the multiples of `column_len` that are less than
 -- `unwrapped_col_width` mod the `wrapped_col_width`, minus the gutter width
 -- returns a table containing the multiples of `column_len`
@@ -70,7 +78,7 @@ local function exceed(buf, win, min_colorcolumn)
          local unwrapped_col_width = wrapped_rows * column_number
          exceed_columns = get_wrapped_column_numbers(unwrapped_col_width,
             win_width, gutter_width, column_number, min_colorcolumn)
-         exceed_table = vim.tbl_extend("keep", exceed_table, exceed_columns)
+         exceed_table = table_merge(exceed_table, exceed_columns)
       else
           num_rows_changed = (vim.b.prev_num_wrapped_rows ~= 1)
           vim.b.prev_num_wrapped_rows = 1
@@ -99,11 +107,11 @@ local function set_win_colorcolumns(buf, win, colorcolumns)
    if type(colorcolumns) == "table" then
       local colorcolumns_to_set = {}
       local diff_state = nil
-      for _, colorcolumn in colorcolumns do
+      for _, colorcolumn in ipairs(colorcolumns) do
          current_state, exceed_cols = exceed(buf, win, tonumber(colorcolumn))
          if current_state ~= vim.b.prev_state then
-            vim.b.prev_state = current_state
-            colorcolumns_to_set = vim.tbl_extend("keep", colorcolumns_to_set, exceed_cols)
+            diff_state = current_state
+            colorcolumns_to_set = table_merge(colorcolumns_to_set, exceed_cols)
          end
       end
       if diff_state ~= nil then
