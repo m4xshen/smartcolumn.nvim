@@ -8,7 +8,7 @@ local config = {
 }
 
 -- merge values from t2 into t1. returns t1
-local function table_merge(t1, t2) 
+local function table_merge(t1, t2)
     for _, v in ipairs(t2) do
         table.insert(t1, v)
     end
@@ -25,7 +25,7 @@ local function get_wrapped_column_numbers(unwrapped_col_width,
    min_colorcolumn
    )
    local t = {}
-   if column_len <= min_colorcolumn then
+   if column_len <= min_colorcolumn or wrapped_col_width - gutter_width <= min_colorcolumn then
        return t
    end
    local c_col = min_colorcolumn
@@ -77,7 +77,7 @@ local function exceed(buf, win, min_colorcolumn)
              vim.b.prev_num_wrapped_rows = wrapped_rows
              vim.b.prev_screen_width = win_width
          end
-         local unwrapped_col_width = wrapped_rows * column_number
+         local unwrapped_col_width = wrapped_rows * (win_width - gutter_width)
          exceed_columns = get_wrapped_column_numbers(unwrapped_col_width,
             win_width, gutter_width, column_number, min_colorcolumn)
          exceed_table = table_merge(exceed_table, exceed_columns)
