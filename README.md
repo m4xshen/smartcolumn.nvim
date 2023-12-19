@@ -31,9 +31,11 @@ A Neovim plugin hiding your colorcolumn when unneeded.
 
 ## ⚙️ Features
 
-The colorcolumn is hidden as default, but it appears after one of lines in the scope exceeds the `colorcolumn` value you set.
+The colorcolumn is hidden as default, but it appears after one of lines in the
+scope exceeds the `colorcolumn` value you set.
 
 You can:
+
 - hide colorcolumn for specific filetype
 - set custom colorcolumn value for different filetype
 - specify the scope where the plugin should work
@@ -43,6 +45,7 @@ You can:
 1. Install via your favorite package manager.
 
 - [lazy.nvim](https://github.com/folke/lazy.nvim)
+
 ```Lua
 {
   "m4xshen/smartcolumn.nvim",
@@ -51,37 +54,45 @@ You can:
 ```
 
 - [packer.nvim](https://github.com/wbthomason/packer.nvim)
+
 ```Lua
 use "m4xshen/smartcolumn.nvim"
 ```
 
 - [vim-plug](https://github.com/junegunn/vim-plug)
+
 ```VimL
 Plug "m4xshen/smartcolumn.nvim"
 ```
 
-2. Setup the plugin in your `init.lua`. This step is not needed with lazy.nvim if `opts` is set as above.
+2. Setup the plugin in your `init.lua`. This step is not needed with lazy.nvim
+   if `opts` is set as above.
+
 ```Lua
 require("smartcolumn").setup()
 ```
 
 ## 🔧 Configuration
 
-You can pass your config table into the `setup()` function or `opts` if you use lazy.nvim.
+You can pass your config table into the `setup()` function or `opts` if you use
+lazy.nvim.
 
 The available options:
 
 - `colorcolumn` (strings or table) : screen columns that are highlighted
   - `"80"` (default)
   - `{ "80", "100" }`
-- `disabled_filetypes` (table of strings) : the `colorcolumn` will be disabled under the filetypes in this table
+- `disabled_filetypes` (table of strings) : the `colorcolumn` will be disabled
+  under the filetypes in this table
   - `{ "help", "text", "markdown" }` (default)
-  - `{ "NvimTree", "lazy", "mason", "help" }`
-- `scope` (strings): the plugin only checks whether the lines within scope exceed colorcolumn
+  - `{ "NvimTree", "lazy", "mason", "help", "checkhealth", "lspinfo", "noice", "Trouble","fish", "zsh"}`
+- `scope` (strings): the plugin only checks whether the lines within scope
+  exceed colorcolumn
   - `"file"` (default): current file
   - `"window"`: visible part of current window
   - `"line"`: current line
-- `custom_colorcolumn` (table or function returning string): custom `colorcolumn` values for different filetypes
+- `custom_colorcolumn` (table or function returning string): custom
+  `colorcolumn` values for different filetypes
   - `{}` (default)
   - `{ ruby = "120", java = { "180", "200"} }`
   - you can also pass a function to handle more complicated logic:
