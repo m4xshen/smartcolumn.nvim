@@ -85,7 +85,7 @@ The available options:
 - `disabled_filetypes` (table of strings) : the `colorcolumn` will be disabled
   under the filetypes in this table
   - `{ "help", "text", "markdown" }` (default)
-  - `{ "NvimTree", "lazy", "mason", "help", "checkhealth", "lspinfo", "noice", "Trouble","fish", "zsh"}`
+  - `{ "NvimTree", "lazy", "mason", "help", "checkhealth", "lspinfo", "noice", "Trouble", "fish", "zsh"}`
 - `scope` (strings): the plugin only checks whether the lines within scope
   exceed colorcolumn
   - `"file"` (default): current file
