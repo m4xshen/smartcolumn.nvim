@@ -86,6 +86,8 @@ The available options:
   under the filetypes in this table
   - `{ "help", "text", "markdown" }` (default)
   - `{ "NvimTree", "lazy", "mason", "help", "checkhealth", "lspinfo", "noice", "Trouble", "fish", "zsh"}`
+  > [!NOTE]
+  > You can use `:set filetype?` to check the filetype of current buffer.
 - `scope` (strings): the plugin only checks whether the lines within scope
   exceed colorcolumn
   - `"file"` (default): current file
