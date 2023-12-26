@@ -87,12 +87,7 @@ The available options:
   - `{ "help", "text", "markdown" }` (default)
   - `{ "NvimTree", "lazy", "mason", "help", "checkhealth", "lspinfo", "noice", "Trouble", "fish", "zsh"}`
   > [!NOTE]
-  > Filetype Sometimes it is very hard to get one buffer's filetype,
-  > because some are very confusing (e.g., lspinfo). You can use
-  > `:set filetype?` to check the filetype of current buffer. If Vim or Neovim
-  > displays filetype= without any value, it means that the file type has not
-  > been set for the current buffer. In such cases, you may manually set the
-  > file type with :set filetype=type, where type is the desired file type.
+  > You can use `:set filetype?` to check the filetype of current buffer.
 - `scope` (strings): the plugin only checks whether the lines within scope
   exceed colorcolumn
   - `"file"` (default): current file
