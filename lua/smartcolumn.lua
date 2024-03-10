@@ -76,7 +76,7 @@ local function update()
                   vim.wo[win].colorcolumn = colorcolumns
                end
             else
-               vim.wo[win].colorcolumn = nil
+               vim.wo[win].colorcolumn = ""
             end
          end
       end
