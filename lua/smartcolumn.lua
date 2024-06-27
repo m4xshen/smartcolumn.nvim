@@ -8,6 +8,7 @@ local config = {
 }
 
 local function exceed(buf, win, min_colorcolumn)
+   if vim.tbl_contains(config.disabled_filetypes, vim.bo.ft) then return false end
    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, true) -- file scope
    if config.scope == "line" then
       lines = vim.api.nvim_buf_get_lines(
@@ -25,8 +26,6 @@ local function exceed(buf, win, min_colorcolumn)
       )
    end
 
-   local max_column = 0
-
    for _, line in pairs(lines) do
       local success, column_number = pcall(vim.fn.strdisplaywidth, line)
 
@@ -34,11 +33,10 @@ local function exceed(buf, win, min_colorcolumn)
          return false
       end
 
-      max_column = math.max(max_column, column_number)
+      if column_number > min_colorcolumn then return true end
    end
 
-   return not vim.tbl_contains(config.disabled_filetypes, vim.bo.ft)
-      and max_column > min_colorcolumn
+   return false
 end
 
 local function update()
