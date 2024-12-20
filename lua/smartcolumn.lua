@@ -5,6 +5,7 @@ local config = {
    disabled_filetypes = { "help", "text", "markdown" },
    custom_colorcolumn = {},
    scope = "file",
+   editorconfig = true,
 }
 
 local function exceed(buf, win, min_colorcolumn)
@@ -41,6 +42,13 @@ local function exceed(buf, win, min_colorcolumn)
       and max_column > min_colorcolumn
 end
 
+local function colorcolumn_editorconfig(colorcolumns)
+   return vim.b[0].editorconfig
+         and vim.b[0].editorconfig.max_line_length ~= "off"
+         and vim.b[0].editorconfig.max_line_length
+      or colorcolumns
+end
+
 local function update()
    local buf_filetype = vim.api.nvim_buf_get_option(0, "filetype")
    local colorcolumns
@@ -50,6 +58,10 @@ local function update()
    else
       colorcolumns = config.custom_colorcolumn[buf_filetype]
          or config.colorcolumn
+   end
+
+   if config.editorconfig then
+      colorcolumns = colorcolumn_editorconfig(colorcolumns)
    end
 
    local min_colorcolumn = colorcolumns

@@ -103,6 +103,7 @@ The available options:
      return "100"
   end
   ```
+- `editorconfig`: use `max_line_length` from EditorConfig, overrides `custom_colorcolumn`
 
 ### Default config
 
@@ -112,5 +113,6 @@ local config = {
    disabled_filetypes = { "help", "text", "markdown" },
    custom_colorcolumn = {},
    scope = "file",
+   editorconfig = true,
 }
 ```
