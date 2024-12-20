@@ -5,7 +5,7 @@ local config = {
    disabled_filetypes = { "help", "text", "markdown" },
    custom_colorcolumn = {},
    scope = "file",
-   editorconfig = false,
+   editorconfig = true,
 }
 
 local function exceed(buf, win, min_colorcolumn)
