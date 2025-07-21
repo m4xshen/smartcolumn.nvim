@@ -119,4 +119,4 @@ local config = {
 
 ## ⭐ Star History
 
-[![Star History Chart](https://app.repohistory.com/api/svg?repo=m4xshen/smartcolumn.nvim&type=Date&theme=dark&transparent=false&color=FCE2C6)](https://app.repohistory.com/star-history)
+[![Star History Chart](https://app.repohistory.com/api/svg?repo=m4xshen/smartcolumn.nvim&type=Date&background=0D1117&color=FCE2C6)](https://app.repohistory.com/star-history)
