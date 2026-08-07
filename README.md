@@ -37,6 +37,7 @@ scope exceeds the `colorcolumn` value you set.
 You can:
 
 - hide colorcolumn for specific filetype
+- show colorcolumn only for specific filetype
 - set custom colorcolumn value for different filetype
 - specify the scope where the plugin should work
 
@@ -82,6 +83,13 @@ The available options:
 - `colorcolumn` (strings or table) : screen columns that are highlighted
   - `"80"` (default)
   - `{ "80", "100" }`
+- `enabled_filetypes` (table of strings or `nil`) : only the filetypes in this
+  table will have the `colorcolumn` shown
+  - `nil` (default): all filetypes are allowed
+  - `{}` : no filetype is allowed, the `colorcolumn` never shows
+  - `{ "lua", "python" }`
+  > If a filetype is in both `enabled_filetypes` and `disabled_filetypes`, it is
+  > disabled.
 - `disabled_filetypes` (table of strings) : the `colorcolumn` will be disabled
   under the filetypes in this table
   - `{ "help", "text", "markdown" }` (default)
@@ -110,6 +118,7 @@ The available options:
 ```Lua
 local config = {
    colorcolumn = "80",
+   enabled_filetypes = nil,
    disabled_filetypes = { "help", "text", "markdown" },
    custom_colorcolumn = {},
    scope = "file",

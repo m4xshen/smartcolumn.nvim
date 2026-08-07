@@ -2,14 +2,24 @@ local smartcolumn = {}
 
 local config = {
    colorcolumn = "80",
+   enabled_filetypes = nil, -- nil means "allow all", {} means "allows nothing"
    disabled_filetypes = { "help", "text", "markdown" },
    custom_colorcolumn = {},
    scope = "file",
    editorconfig = true,
 }
 
+local enabled_fts = nil
+local disabled_fts = {}
+
+local function filetype_allowed(ft)
+   if disabled_fts[ft] then return false end
+   if enabled_fts ~= nil and not enabled_fts[ft] then return false end
+   return true
+end
+
 local function exceed(buf, win, min_colorcolumn)
-   if vim.tbl_contains(config.disabled_filetypes, vim.bo.ft) then return false end
+   if not filetype_allowed(vim.bo.ft) then return false end
    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, true) -- file scope
    if config.scope == "line" then
       lines = vim.api.nvim_buf_get_lines(
@@ -48,7 +58,7 @@ local function colorcolumn_editorconfig(colorcolumns)
 end
 
 local function update()
-   local buf_filetype = vim.api.nvim_buf_get_option(0, "filetype")
+   local buf_filetype = vim.bo[0].filetype
    local colorcolumns
 
    if type(config.custom_colorcolumn) == "function" then
@@ -98,6 +108,16 @@ function smartcolumn.setup(user_config)
 
    for option, value in pairs(user_config) do
       config[option] = value
+   end
+
+   enabled_fts = config.enabled_filetypes and {}
+   if enabled_fts then
+      for _, ft in pairs(config.enabled_filetypes) do
+         enabled_fts[ft] = true
+      end
+   end
+   for _, ft in pairs(config.disabled_filetypes) do
+      disabled_fts[ft] = true
    end
 
    local group = vim.api.nvim_create_augroup("SmartColumn", {})
