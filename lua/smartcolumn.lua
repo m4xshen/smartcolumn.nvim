@@ -9,8 +9,8 @@ local config = {
    editorconfig = true,
 }
 
-local enabled_fts
-local disabled_fts
+local enabled_fts = nil
+local disabled_fts = {}
 
 local function filetype_allowed(ft)
    if disabled_fts[ft] then return false end
